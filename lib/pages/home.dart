@@ -60,17 +60,14 @@ class _HomePageState extends State<HomePage> {
                   : Icon(Icons.offline_bolt, color: Colors.red)),
         ],
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            _showGraph(),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: bands.length,
-                  itemBuilder: (context, i) => _bandTile(bands[i])),
-            ),
-          ],
-        ),
+      body: Column(
+        children: <Widget>[
+          (bands.length>1) ?_showGraph(): Text('cargando'),
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: bands.length,
+              itemBuilder: (context, i) => _bandTile(bands[i])),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -182,25 +179,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _showGraph() {
-    Map<String, double> dataMap = {};
+    Map<String, double> dataMap = new Map();
     bands.forEach((band) {
       dataMap.putIfAbsent(band.name, () => band.votes.toDouble());
     });
-    return PieChart(
-      dataMap: dataMap,
-      animationDuration: Duration(milliseconds: 800),
-      chartLegendSpacing: 32,
-      initialAngleInDegree: 0,
-      chartType: ChartType.disc,
-      //centerText: "HYBRID",
-      legendOptions: LegendOptions(
-        showLegendsInRow: false,
-        legendPosition: LegendPosition.right,
-        showLegends: true,
-        legendTextStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
+    return PieChart(dataMap: dataMap);
   }
 }
