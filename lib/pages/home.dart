@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final socketClass = Provider.of<Socket>(context);
     return Scaffold(
       appBar: AppBar(
@@ -60,9 +61,9 @@ class _HomePageState extends State<HomePage> {
                   : Icon(Icons.offline_bolt, color: Colors.red)),
         ],
       ),
-      body: Column(
+      body: ListView(
         children: <Widget>[
-          (bands.length>1) ?_showGraph(): Text('cargando'),
+          (bands.length > 1) ? _showGraph(size) : Text('cargando'),
           ListView.builder(
               shrinkWrap: true,
               itemCount: bands.length,
@@ -178,11 +179,14 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
   }
 
-  Widget _showGraph() {
+  Widget _showGraph(Size size) {
     Map<String, double> dataMap = new Map();
     bands.forEach((band) {
       dataMap.putIfAbsent(band.name, () => band.votes.toDouble());
     });
-    return PieChart(dataMap: dataMap);
+    return Container(
+      height: size.height*0.4,
+      child: PieChart(dataMap: dataMap),
+    );
   }
 }
